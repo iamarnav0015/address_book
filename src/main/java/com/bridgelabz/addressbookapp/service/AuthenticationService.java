@@ -6,12 +6,13 @@ import com.bridgelabz.addressbookapp.Interface.IAuthenticationService;
 import com.bridgelabz.addressbookapp.repository.AuthenticationRepository;
 import com.bridgelabz.addressbookapp.Util.*;
 import com.bridgelabz.addressbookapp.model.AuthUser;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-
+@Slf4j
 @Service
 public class AuthenticationService implements IAuthenticationService {
     @Autowired

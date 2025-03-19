@@ -4,11 +4,12 @@ import com.bridgelabz.addressbookapp.dto.AddressBookDTO;
 import com.bridgelabz.addressbookapp.exception.ContactNotFoundException;
 import com.bridgelabz.addressbookapp.model.AddressBook;
 import com.bridgelabz.addressbookapp.repository.AddressBookRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Slf4j
 @Service
 public class AddressBookService implements IAddressBookService {
 
