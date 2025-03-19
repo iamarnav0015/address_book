@@ -14,7 +14,7 @@ public class AddressBookDTO {
 
     @Pattern(regexp = "\\d{10}", message = "Phone number must be 10 digits")
     private String phoneNumber;
-
+    @Pattern(regexp = "^[a-zA-Z0-9_+-]+@[a-z]+\\.[a-zA-Z0-9.-]{2,}$")
     @Email(message = "Invalid email format")
     private String email;
 
