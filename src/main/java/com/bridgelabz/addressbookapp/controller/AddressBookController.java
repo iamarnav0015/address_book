@@ -24,22 +24,22 @@ public class AddressBookController {
 
     @GetMapping("/{id}")
     public ResponseEntity<AddressBook> getContactById(@PathVariable int id) {
-        return ResponseEntity.ok(addressBookService.getContactById(id));
+        return ResponseEntity.ok(addressBookService.getContactById((long) id));
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<AddressBook>> getAllContacts() {
+    public ResponseEntity<List<AddressBookDTO>> getAllContacts() {
         return ResponseEntity.ok(addressBookService.getAllContacts());
     }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<AddressBook> updateContact(@PathVariable int id, @Valid @RequestBody AddressBookDTO addressBookDTO) {
-        return ResponseEntity.ok(addressBookService.updateContact(id, addressBookDTO));
+        return ResponseEntity.ok(addressBookService.updateContact((long) id, addressBookDTO));
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteContact(@PathVariable int id) {
-        addressBookService.deleteContact(id);
+        addressBookService.deleteContact((long) id);
         return ResponseEntity.noContent().build();
     }
 }
