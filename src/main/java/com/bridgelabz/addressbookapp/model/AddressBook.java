@@ -2,13 +2,15 @@ package com.bridgelabz.addressbookapp.model;
 
 import com.bridgelabz.addressbookapp.dto.AddressBookDTO;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Setter
-@Getter
+@Data
 @Entity
-@Table(name = "addressbook_db")
+@NoArgsConstructor
+@Table(name = "addressbook")
 public class AddressBook {
 
     @Id
@@ -20,17 +22,11 @@ public class AddressBook {
     private String phoneNumber;
     private String email;
 
-    // Default Constructor (mandatory for Hibernate)
-    public AddressBook() {}
-
-    // Parameterized Constructor (for DTO mapping)
     public AddressBook(AddressBookDTO dto) {
         this.name = dto.getName();
         this.address = dto.getAddress();
         this.phoneNumber = dto.getPhoneNumber();
         this.email = dto.getEmail();
     }
-
-    // Getters and Setters (manual)
 
 }

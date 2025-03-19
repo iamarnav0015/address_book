@@ -1,7 +1,7 @@
 package com.bridgelabz.addressbookapp.service;
 
 import com.bridgelabz.addressbookapp.dto.AddressBookDTO;
-import com.bridgelabz.addressbookapp.exception.UserException;
+import com.bridgelabz.addressbookapp.exception.ContactNotFoundException;
 import com.bridgelabz.addressbookapp.model.AddressBook;
 import com.bridgelabz.addressbookapp.repository.AddressBookRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -9,103 +9,52 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 @Slf4j
 @Service
-public class AddressBookService implements IAddressBookService {
-
+public class AddressBookService implements IAddressService {
 
     @Autowired
     private AddressBookRepository repository;
 
     @Override
-    public List<AddressBookDTO> getAllContacts() {
-        try {
-            log.info("Fetching all contacts from the database.");
-            return repository.findAll().stream()
-                    .map(contact -> new AddressBookDTO())
-                    .collect(Collectors.toList());
-        } catch (Exception e) {
-            log.error("Error fetching contacts: {}", e.getMessage());
-            throw new UserException("Failed to fetch contacts. Please try again.");
-        }
+    public AddressBook addContact(AddressBookDTO addressBookDTO) {
+        log.info("Adding Address Entry: {}", addressBookDTO);
+        AddressBook contact = new AddressBook(addressBookDTO);
+        return repository.save(contact);
     }
 
     @Override
-    public AddressBookDTO addContact(AddressBookDTO dto) {
-        try {
-            log.info("Saving new contact: {}", dto);
-            AddressBook contact = new AddressBook();
-            contact.setName(dto.getName());
-            contact.setPhoneNumber(dto.getPhoneNumber());
-            AddressBook savedContact = repository.save(contact);
-            log.info("Contact saved successfully with ID: {}", savedContact.getId());
-            return new AddressBookDTO();
-        } catch (Exception e) {
-            log.error("Error saving contact: {}", e.getMessage());
-            throw new UserException("Failed to save contact. Please try again.");
-        }
+    public AddressBook updateContact(int id, AddressBookDTO addressBookDTO) {
+        log.info("Updating address with id: {}", id);
+        AddressBook contact = repository.findById(id)
+                .orElseThrow(() -> new ContactNotFoundException("Contact not found for ID: " + id));
+
+        contact.setName(addressBookDTO.getName());
+        contact.setAddress(addressBookDTO.getAddress());
+        contact.setPhoneNumber(addressBookDTO.getPhoneNumber());
+        contact.setEmail(addressBookDTO.getEmail());
+
+        return repository.save(contact);
     }
 
     @Override
-    public AddressBookDTO getContactById(Long id) {
-        try {
-            log.info("Fetching contact with ID: {}", id);
-            Optional<AddressBook> contact = repository.findById(Math.toIntExact(id));
-            if (contact.isEmpty()) {
-                log.warn("Contact with ID {} not found.", id);
-                throw new UserException("Contact not found with ID: " + id);
-            }
-            return new AddressBookDTO();
-        } catch (Exception e) {
-            log.error("Error fetching contact by ID: {}", e.getMessage());
-            throw new UserException("Failed to retrieve contact. Please try again.");
-        }
+    public AddressBook getContactById(int id) {
+        log.info("Fetching address with id: {}", id);
+        return repository.findById(id)
+                .orElseThrow(() -> new ContactNotFoundException("Contact not found for ID: " + id));
     }
 
     @Override
-    public AddressBookDTO updateContact(long id, AddressBookDTO dto) {
-        try {
-            log.info("Updating contact with ID: {}", id);
-            Optional<AddressBook> existingContact = repository.findById((int) id);
-            if (existingContact.isEmpty()) {
-                log.warn("Attempted to update non-existing contact with ID: {}", id);
-                throw new UserException("Contact not found with ID: " + id);
-            }
-
-            AddressBook contact = existingContact.get();
-            contact.setName(dto.getName());
-            contact.setPhoneNumber(dto.getPhoneNumber());
-            AddressBook updatedContact = repository.save(contact);
-
-            log.info("Contact updated successfully: {}", updatedContact);
-            return new AddressBookDTO();
-
-        } catch (Exception e) {
-            log.error("Error updating contact: {}", e.getMessage());
-            throw new UserException("Failed to update contact. Please try again.");
-        }
-
+    public List<AddressBook> getAllContacts() {
+        log.info("Fetching all address entries");
+        return repository.findAll();
     }
 
     @Override
-    public void deleteContact(Long id) {
-        try {
-            log.info("Deleting contact with ID: {}", id);
-            if (repository.existsById(Math.toIntExact(id))) {
-                repository.deleteById(Math.toIntExact(id));
-                log.info("Contact with ID {} deleted successfully.", id);
-            } else {
-                log.warn("Attempted to delete non-existing contact with ID: {}", id);
-                throw new UserException("Contact not found with ID: " + id);
-            }
-        } catch (Exception e) {
-            log.error("Error deleting contact: {}", e.getMessage());
-            throw new UserException("Failed to delete contact. Please try again.");
-        }
+    public void deleteContact(int id) {
+        log.info("Deleting address with id: {}", id);
+        AddressBook contact = repository.findById(id)
+                .orElseThrow(() -> new ContactNotFoundException("Contact not found for ID: " + id));
+        repository.delete(contact);
     }
 }
-
-

@@ -5,11 +5,16 @@ import lombok.Getter;
 import lombok.Setter;
 @Getter
 @Setter
-
 public class ResetPasswordDTO {
-    @NotBlank(message = "Current password cannot be empty")
-    private String currentPassword;
 
-    @NotBlank(message = "New password cannot be empty")
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
+    }
+
+    @NotBlank(message = "New password is required")
     private String newPassword;
 }
