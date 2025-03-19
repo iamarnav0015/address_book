@@ -1,30 +1,37 @@
 package com.bridgelabz.addressbookapp.model;
 
 import com.bridgelabz.addressbookapp.dto.AddressBookDTO;
-import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
-@Entity
-@Table(name = "addressbook_db")
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
 public class AddressBook {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    private int id;
     private String name;
     private String address;
     private String phoneNumber;
     private String email;
 
-    // Constructor to convert DTO to Model
-    public AddressBook(AddressBookDTO dto) {
-        this.name = dto.getName();
-        this.address = dto.getAddress();
-        this.phoneNumber = dto.getPhoneNumber();
-        this.email = dto.getEmail();
+    // Constructor using DTO
+    public AddressBook(int id, AddressBookDTO addressBookDTO) {
+        this.id = id;
+        this.name = addressBookDTO.getName();
+        this.address = addressBookDTO.getAddress();
+        this.phoneNumber = addressBookDTO.getPhoneNumber();
+        this.email = addressBookDTO.getEmail();
     }
+
+    // Method to update contact details using DTO
+    public void update(AddressBookDTO addressBookDTO) {
+        this.name = addressBookDTO.getName();
+        this.address = addressBookDTO.getAddress();
+        this.phoneNumber = addressBookDTO.getPhoneNumber();
+        this.email = addressBookDTO.getEmail();
+    }
+
+    public int getId() {
+        return id;
+    }
+
 }
