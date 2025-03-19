@@ -25,7 +25,7 @@ public class AddressBookService implements IAddressBookService {
         try {
             log.info("Fetching all contacts from the database.");
             return repository.findAll().stream()
-                    .map(contact -> new AddressBookDTO(contact.getId(), contact.getName(), contact.getPhone()))
+                    .map(contact -> new AddressBookDTO())
                     .collect(Collectors.toList());
         } catch (Exception e) {
             log.error("Error fetching contacts: {}", e.getMessage());
@@ -39,10 +39,10 @@ public class AddressBookService implements IAddressBookService {
             log.info("Saving new contact: {}", dto);
             AddressBook contact = new AddressBook();
             contact.setName(dto.getName());
-            contact.setPhone(dto.getPhone());
+            contact.setPhoneNumber(dto.getPhoneNumber());
             AddressBook savedContact = repository.save(contact);
             log.info("Contact saved successfully with ID: {}", savedContact.getId());
-            return new AddressBookDTO(savedContact.getId(), savedContact.getName(), savedContact.getPhone());
+            return new AddressBookDTO();
         } catch (Exception e) {
             log.error("Error saving contact: {}", e.getMessage());
             throw new UserException("Failed to save contact. Please try again.");
@@ -58,7 +58,7 @@ public class AddressBookService implements IAddressBookService {
                 log.warn("Contact with ID {} not found.", id);
                 throw new UserException("Contact not found with ID: " + id);
             }
-            return new AddressBookDTO(contact.get().getId(), contact.get().getName(), contact.get().getPhone());
+            return new AddressBookDTO();
         } catch (Exception e) {
             log.error("Error fetching contact by ID: {}", e.getMessage());
             throw new UserException("Failed to retrieve contact. Please try again.");
@@ -77,11 +77,11 @@ public class AddressBookService implements IAddressBookService {
 
             AddressBook contact = existingContact.get();
             contact.setName(dto.getName());
-            contact.setPhone(dto.getPhone());
+            contact.setPhoneNumber(dto.getPhoneNumber());
             AddressBook updatedContact = repository.save(contact);
 
             log.info("Contact updated successfully: {}", updatedContact);
-            return new AddressBookDTO(updatedContact.getId(), updatedContact.getName(), updatedContact.getPhone());
+            return new AddressBookDTO();
 
         } catch (Exception e) {
             log.error("Error updating contact: {}", e.getMessage());

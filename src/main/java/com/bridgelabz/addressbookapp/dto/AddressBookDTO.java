@@ -1,29 +1,47 @@
 package com.bridgelabz.addressbookapp.dto;
 
-import com.bridgelabz.addressbookapp.model.AddressBook;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
-@Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class AddressBookDTO extends AddressBook {
+@Getter
+public class AddressBookDTO {
 
-    private Long id;
-
-    @NotBlank(message = "Name is required")
-    @Pattern(
-            regexp = "^[A-Z][a-zA-Z\\s]*$",
-            message = "Name must start with a capital letter and contain only letters and spaces"
-    )
+    // Setters
+    // Getters
+    @NotBlank(message = "Name cannot be empty")
     private String name;
 
-    @NotBlank(message = "Phone number is required")
-    @Pattern(
-            regexp = "^\\d{10}$",
-            message = "Phone number must be exactly 10 digits"
-    )
-    private String phone;
+    @NotBlank(message = "Address cannot be empty")
+    private String address;
+
+    @Pattern(regexp = "\\d{10}", message = "Phone number must be 10 digits")
+    private String phoneNumber;
+    @Pattern(regexp = "^[a-zA-Z0-9_+-]+@[a-z]+\\.[a-zA-Z0-9.-]{2,}$")
+    @Email(message = "Invalid email format")
+    private String email;
+
+    // Constructor
+    public AddressBookDTO() {}
+
+    public AddressBookDTO(String name, String address, String phoneNumber, String email) {
+        this.name = name;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+    }
+
+    // toString Method
+    @Override
+    public String toString() {
+        return "AddressBookDTO{" +
+                "name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
 }
