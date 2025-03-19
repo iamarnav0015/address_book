@@ -1,7 +1,6 @@
 package com.bridgelabz.addressbookapp.controller;
 
-import com.bridgelabz.addressbookapp.dto.AuthUserDTO;
-import com.bridgelabz.addressbookapp.dto.ResponseDTO;
+import com.bridgelabz.addressbookapp.dto.*;
 import com.bridgelabz.addressbookapp.service.AuthenticationService;
 import com.bridgelabz.addressbookapp.model.AuthUser;
 import jakarta.validation.Valid;
@@ -17,9 +16,32 @@ public class AuthUserController {
     @PostMapping("/register")
     public ResponseEntity<ResponseDTO> register(@Valid @RequestBody AuthUserDTO userDTO) throws Exception{
         AuthUser user=authenticationService.register(userDTO);
-        ResponseDTO responseUserDTO =new ResponseDTO("User details is submitted!",user);
+        ResponseDTO responseUserDTO =new ResponseDTO("User details are submitted!",user);
         return new ResponseEntity<>(responseUserDTO, HttpStatus.CREATED);
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<ResponseDTO> login(@Valid @RequestBody LoginDTO loginDTO){
+        String result=authenticationService.login(loginDTO);
+        ResponseDTO responseUserDTO=new ResponseDTO("Login successful!!",result);
+        return  new ResponseEntity<>(responseUserDTO,HttpStatus.OK);
+    }
+    @PutMapping("/forgotPassword/{email}")
+    public ResponseEntity<ResponseDTO> forgotPassword(@PathVariable String email,
+                                                      @Valid @RequestBody ForgetPasswordDTO forgotPasswordDTO) {
+        String responseMessage = authenticationService.forgotPassword(email, forgotPasswordDTO.getPassword());
+        ResponseDTO responseDTO = new ResponseDTO(responseMessage, null);
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+    }
+    @PutMapping("/resetPassword/{email}")
+    public ResponseEntity<ResponseDTO> resetPassword(@PathVariable String email,
+                                                     @Valid @RequestBody ResetPasswordDTO resetPasswordDTO) {
+        String responseMessage = authenticationService.resetPassword(email,
+                resetPasswordDTO.getCurrentPassword(),
+                resetPasswordDTO.getNewPassword());
+        return new ResponseEntity<>(new ResponseDTO(responseMessage, null), HttpStatus.OK);
+    }
+
 
 
 }
